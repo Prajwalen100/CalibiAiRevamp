@@ -7,7 +7,7 @@ import { brand, servicesPage } from "@/content/site";
 const title = "Detailed AI Services | Calibi AI";
 const description =
   "Business automation, AI consultation, AI development, and AI training for colleges and corporates — delivered as practical systems by Calibi AI.";
-const siteUrl = "https://animated-partners-glamour.lovable.app";
+const siteUrl = "https://calibiai.com";
 
 export const Route = createFileRoute("/services")({
   head: () => ({

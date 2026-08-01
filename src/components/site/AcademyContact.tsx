@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import { academyPage, brand } from "@/content/site";
 import { Pill, Reveal, SectionLabel } from "./primitives";
 
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/mkodlvzw";
+
 const f = academyPage.contact.fields;
 
 const fieldClass =
@@ -78,17 +80,41 @@ export function AcademyContact() {
           <Reveal delay={0.08} className="bg-card p-6 sm:p-10 lg:p-14">
             <form
               className="grid gap-7 sm:grid-cols-2"
-              onSubmit={(e) => {
+              action={FORMSPREE_ENDPOINT}
+              method="POST"
+              onSubmit={async (e) => {
                 e.preventDefault();
                 setSending(true);
+
                 const form = e.currentTarget;
-                window.setTimeout(() => {
-                  setSending(false);
-                  form.reset();
-                  toast.success(academyPage.contact.submit, {
-                    description: academyPage.contact.helper,
+                const formData = new FormData(form);
+
+                try {
+                  const response = await fetch(FORMSPREE_ENDPOINT, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                      Accept: "application/json",
+                    },
                   });
-                }, 600);
+
+                  if (response.ok) {
+                    form.reset();
+                    toast.success("Enquiry Sent!", {
+                      description: "Thank you! We'll get back to you soon.",
+                    });
+                  } else {
+                    const data = await response.json();
+                    throw new Error(data.error || "Something went wrong");
+                  }
+                } catch (error) {
+                  console.error("Form submission error:", error);
+                  toast.error("Failed to send enquiry", {
+                    description: "Please try again or email us directly at sales@calibiai.com",
+                  });
+                } finally {
+                  setSending(false);
+                }
               }}
             >
               <Field label={f.name}>
@@ -129,6 +155,10 @@ export function AcademyContact() {
                   <textarea name="message" rows={4} className={`${fieldClass} resize-none`} />
                 </Field>
               </div>
+
+              {/* Hidden fields for Formspree */}
+              <input type="hidden" name="_subject" value="New Partnership Enquiry from Calibi AI Website" />
+              <input type="hidden" name="_replyto" value={brand.email} />
 
               <div className="sm:col-span-2">
                 <button

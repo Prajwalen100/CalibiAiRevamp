@@ -15,7 +15,7 @@ import dermaImg from "@/assets/derma.webp";
 
 export const brand = {
   name: "Calibi AI",
-  tagline: "Premium AI Automation Solutions",
+  tagline: "Premium AI Services",
   email: "sales@calibiai.com",
   address: "Hinjewadi Phase 1, Pune, Maharashtra 411057",
   copyright: "© 2026 Calibi AI. All rights reserved.",
@@ -34,7 +34,7 @@ export const nav = [
 
 export const hero = {
   h1a: "Transform Your Business",
-  h1b: "with AI Automation",
+  h1b: "with AI Services",
   sub: "Enterprise-grade AI solutions that automate workflows, enhance customer experiences, and drive measurable results. Join 50+ companies scaling with intelligent automation.",
   primaryCta: "Book a Free Consultation",
   secondaryCta: "View Case Studies",

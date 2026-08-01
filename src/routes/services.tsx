@@ -7,6 +7,7 @@ import { brand, servicesPage } from "@/content/site";
 const title = "Detailed AI Services | Calibi AI";
 const description =
   "Business automation, AI consultation, AI development, and AI training for colleges and corporates — delivered as practical systems by Calibi AI.";
+const siteUrl = "https://animated-partners-glamour.lovable.app";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -16,7 +17,29 @@ export const Route = createFileRoute("/services")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${siteUrl}/services` },
       { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: `${siteUrl}/services` }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          itemListElement: servicesPage.blocks.map((block, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            item: {
+              "@type": "Service",
+              name: block.heading,
+              description: block.intro,
+              provider: { "@type": "Organization", name: brand.name },
+              areaServed: "Worldwide",
+            },
+          })),
+        }),
+      },
     ],
   }),
   component: ServicesPage,

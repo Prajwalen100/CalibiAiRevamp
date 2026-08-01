@@ -115,6 +115,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Calibi AI",
+          url: "https://animated-partners-glamour.lovable.app",
+          description:
+            "Premium AI automation, development, consulting, and training for businesses, colleges, and corporate teams.",
+          email: "sales@calibiai.com",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "Hinjewadi Phase 1",
+            addressLocality: "Pune",
+            addressRegion: "Maharashtra",
+            postalCode: "411057",
+            addressCountry: "IN",
+          },
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,

@@ -58,7 +58,7 @@ export function ServicesGrid() {
 
                 <div
                   className={cn(
-                    "mt-6 flex flex-col",
+                    "mt-6 flex flex-1 flex-col",
                     banner && "lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-12",
                   )}
                 >

@@ -22,10 +22,7 @@ export function Testimonials() {
             <Reveal
               key={t.name}
               delay={(i % 2) * 0.07}
-              className={cn(
-                "flex flex-col bg-card p-6 sm:p-9",
-                i === 3 && "md:col-span-2",
-              )}
+              className={cn("flex flex-col bg-card p-6 sm:p-9")}
             >
               <Quote className="h-5 w-5 shrink-0 text-accent" />
               <blockquote className="mt-6 text-base leading-relaxed text-foreground/90 sm:text-lg">

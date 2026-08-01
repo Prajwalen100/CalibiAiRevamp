@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X, ArrowUpRight } from "lucide-react";
+import { AnimatePresence, motion, useScroll, useSpring } from "motion/react";
 import { useEffect, useState } from "react";
 import { brand, nav } from "@/content/site";
 import { cn } from "@/lib/utils";
@@ -8,6 +9,8 @@ export function Nav() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 26, mass: 0.3 });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -63,7 +66,12 @@ export function Nav() {
               >
                 {item.label}
                 {active ? (
-                  <span aria-hidden className="absolute -bottom-0.5 left-0 h-full w-full border-b border-accent" />
+                  <motion.span
+                    layoutId="nav-active-underline"
+                    aria-hidden
+                    className="absolute -bottom-0.5 left-0 h-full w-full border-b border-accent"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  />
                 ) : null}
               </Link>
             );
@@ -97,33 +105,56 @@ export function Nav() {
         </button>
       </div>
 
-      {open ? (
-        <div className="border-b border-border bg-background px-5 pb-7 pt-2 sm:px-8 lg:hidden">
-          <nav className="flex flex-col">
-            {nav.map((item, i) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="flex items-baseline justify-between border-b border-border py-4"
-              >
-                <span className="display text-2xl">{item.label}</span>
-                <span className="mono-label text-accent">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-              </Link>
-            ))}
-          </nav>
-          <a
-            href={brand.calendly}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mono-label mt-6 flex items-center justify-between bg-foreground px-4 py-3.5 text-primary-foreground"
+      <motion.div
+        aria-hidden
+        style={{ scaleX: progress }}
+        className="h-px w-full origin-left bg-accent"
+      />
+
+      <AnimatePresence initial={false}>
+        {open ? (
+          <motion.div
+            key="mobile-menu"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.2, 0.7, 0.2, 1] }}
+            className="overflow-hidden border-b border-border bg-background lg:hidden"
           >
-            Book a Free Consultation
-            <ArrowUpRight className="h-3.5 w-3.5" />
-          </a>
-        </div>
-      ) : null}
+            <div className="px-5 pb-7 pt-2 sm:px-8">
+              <nav className="flex flex-col">
+                {nav.map((item, i) => (
+                  <motion.div
+                    key={item.to}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.05 + i * 0.05 }}
+                  >
+                    <Link
+                      to={item.to}
+                      className="flex items-baseline justify-between border-b border-border py-4"
+                    >
+                      <span className="display text-2xl">{item.label}</span>
+                      <span className="mono-label text-accent">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+              <a
+                href={brand.calendly}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mono-label mt-6 flex items-center justify-between bg-foreground px-4 py-3.5 text-primary-foreground"
+              >
+                Book a Free Consultation
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </header>
   );
 }

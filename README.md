@@ -1,27 +1,53 @@
-# Sparkle Site
+# Calibi AI
 
-lets work on https://github.com/RishikeshMech/calibi-reimagined
-need some animations in wesite we have to keep everything million doller staru idea analyse website and do some animations aslo strick rule no content chnaeg add some animation based on your choice (trusted partners should be animated and future prrof extendedable as few more orgs ill be adding not now)
+Marketing site for **Calibi AI** — premium AI automation, development, consulting, and training
+for businesses, colleges, and corporate teams.
 
-This project was built with [Lovable](https://lovable.dev).
-
-**Live app**: https://animated-partners-glamour.lovable.app
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/7487838b-c756-47a8-9832-b8997a65c45c).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+Built with TanStack Start (SSR), React 19, Tailwind CSS v4, shadcn/ui, and Motion.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Requires Node.js 20+ (or Bun).
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+npm install
 npm run dev
 ```
+
+The dev server runs on [http://localhost:8080](http://localhost:8080).
+
+## Scripts
+
+| Script              | Description                                     |
+| ------------------- | ----------------------------------------------- |
+| `npm run dev`       | Start the dev server on port 8080               |
+| `npm run build`     | Production build (Nitro, `cloudflare-module`)   |
+| `npm run build:dev` | Build with development mode settings            |
+| `npm run preview`   | Preview the production build locally            |
+| `npm run lint`      | Run ESLint                                      |
+| `npm run format`    | Format the codebase with Prettier               |
+
+## Project structure
+
+```
+public/            Static assets (favicons, robots.txt, web manifest)
+src/
+  assets/          Images imported by the bundler
+  components/site/ Page sections (Hero, Nav, Footer, …)
+  components/ui/   shadcn/ui primitives
+  content/site.ts  Single source of truth for all site copy
+  routes/          File-based routes (TanStack Router)
+  server.ts        SSR entry with error handling
+  start.ts         Request middleware (error + CSRF)
+```
+
+## Content
+
+All copy lives in [`src/content/site.ts`](src/content/site.ts). Edit that file to change
+site text rather than hardcoding strings in components.
+
+## Deployment
+
+`npm run build` emits a Nitro server bundle targeting `cloudflare-module` in `dist/`
+(`dist/client` for static assets, `dist/server` for the worker). Set a different target by
+adjusting the `nitro()` preset in [`vite.config.ts`](vite.config.ts).

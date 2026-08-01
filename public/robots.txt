@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://animated-partners-glamour.lovable.app/sitemap.xml
+Sitemap: https://calibiai.com/sitemap.xml

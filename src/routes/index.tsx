@@ -12,7 +12,7 @@ import { brand, faqs } from "@/content/site";
 const title = "Calibi AI — Premium AI Automation for Business";
 const description =
   "Enterprise-grade AI chatbots, voice agents, and business automation. Book a free consultation with Calibi AI, a premium AI automation agency in Pune.";
-const siteUrl = "https://animated-partners-glamour.lovable.app";
+const siteUrl = "https://calibiai.com";
 
 export const Route = createFileRoute("/")({
   head: () => ({

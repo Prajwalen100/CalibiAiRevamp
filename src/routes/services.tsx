@@ -32,8 +32,8 @@ export const Route = createFileRoute("/services")({
             position: i + 1,
             item: {
               "@type": "Service",
-              name: block.title,
-              description: block.sub,
+              name: block.heading,
+              description: block.intro,
               provider: { "@type": "Organization", name: brand.name },
               areaServed: "Worldwide",
             },

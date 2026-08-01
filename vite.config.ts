@@ -29,10 +29,12 @@ export default defineConfig(async ({ command, mode }) => {
   ];
 
   // Nitro produces the deployable server bundle; it is build-only.
-  if (command === "build") {
-    const { nitro } = await import("nitro/vite");
-    plugins.push(nitro({ defaultPreset: "cloudflare-module" }));
-  }
+if (command === "build") {
+  const { nitro } = await import("nitro/vite");
+  plugins.push(nitro({ 
+    defaultPreset: "node-server"   // ← Change this
+  }))
+}
 
   plugins.push(viteReact());
 

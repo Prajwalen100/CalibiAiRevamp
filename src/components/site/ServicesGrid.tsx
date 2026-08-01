@@ -47,12 +47,12 @@ export function ServicesGrid() {
                   <span className="mono-label text-accent">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="tag-pill text-muted-foreground">{`0${i + 1} / 07`}</span>
+                  <span className="tag-pill text-muted-foreground">{`0${i + 1} / 06`}</span>
                 </div>
                 {banner ? (
                   <div className="hidden items-start justify-between gap-4 lg:flex">
                     <span className="mono-label text-accent">{String(i + 1).padStart(2, "0")}</span>
-                    <span className="tag-pill text-muted-foreground">{`0${i + 1} / 07`}</span>
+                    <span className="tag-pill text-muted-foreground">{`0${i + 1} / 06`}</span>
                   </div>
                 ) : null}
 

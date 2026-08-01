@@ -43,7 +43,7 @@ export function Nav() {
           >
             {brand.name}
           </span>
-          <span className="mono-label hidden text-accent sm:inline">AI Automation</span>
+          <span className="mono-label hidden text-accent sm:inline">AI Services</span>
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex">

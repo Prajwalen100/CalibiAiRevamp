@@ -7,7 +7,6 @@ import chatbotsImg from "@/assets/chatbots.webp";
 import voiceImg from "@/assets/voice.webp";
 import multiagentImg from "@/assets/multiagent.webp";
 import bizautoImg from "@/assets/bizauto.webp";
-import contentImg from "@/assets/content.webp";
 import prebuiltImg from "@/assets/prebuilt.webp";
 import consultImg from "@/assets/consult.webp";
 import vrampImg from "@/assets/vramp.webp";
@@ -28,6 +27,7 @@ export const brand = {
 export const nav = [
   { label: "Home", to: "/" },
   { label: "Detailed Services", to: "/services" },
+  { label: "Our Products", to: "/products" },
   { label: "Our Story", to: "/story" },
   { label: "Calibi AI Academy", to: "/academy" },
 ];
@@ -39,7 +39,15 @@ export const hero = {
   primaryCta: "Book a Free Consultation",
   secondaryCta: "View Case Studies",
   trustLabel: "TRUSTED BY",
-  clients: ["Clevrr AI", "DevionX", "Colega AI"],
+  clients: [
+    "Clevrr AI",
+    "DevionX",
+    "Colega AI",
+    "DermaSpace",
+    "VRAMP Automations",
+    "StelonWild",
+    "Stelloworks",
+  ],
 };
 
 export type Service = {
@@ -99,19 +107,6 @@ export const services: Service[] = [
     stat: "60% time savings",
     image: bizautoImg,
     alt: "Warehouse operations team coordinating logistics",
-  },
-  {
-    name: "Content Automation",
-    description: "AI-powered content generation, optimization, and distribution at scale",
-    features: [
-      "SEO optimization",
-      "Multi-format content",
-      "Brand voice training",
-      "Content scheduling",
-    ],
-    stat: "10x content output",
-    image: contentImg,
-    alt: "Content production workspace with laptop and notes",
   },
   {
     name: "Pre-Built Solutions",
@@ -635,6 +630,37 @@ export const academyPage = {
     submit: "Send Partnership Enquiry",
     helper: "Submits directly to Calibi AI Academy partnerships.",
   },
+};
+
+/* ---------------- Products page ---------------- */
+
+export const productsPage = {
+  eyebrow: "Our Products",
+  h1a: "The trusted ecosystem",
+  h1b: "for applied AI talent",
+  sub: "Where ambitious engineering students build verified portfolios, and forward-thinking companies hire proven AI builders.",
+  cards: [
+    {
+      index: "01",
+      eyebrow: "For Students",
+      title: "Build your verified AI portfolio",
+      description:
+        "Ambitious engineering students build real, verified AI projects that showcase applied skills and stand out to hiring teams.",
+      cta: "Join as a Student",
+      href: "https://app.calibiai.com/signin?mode=sign-up",
+      features: ["Build real AI projects", "Get verified skills", "Showcase to hiring teams"],
+    },
+    {
+      index: "02",
+      eyebrow: "For Employers",
+      title: "Hire proven AI builders",
+      description:
+        "Forward-thinking companies connect with a curated ecosystem of talented builders and hire proven, vetted AI talent with confidence.",
+      cta: "Hire on Calibi",
+      href: "https://app.calibiai.com/employer/signin?mode=sign-up",
+      features: ["Access verified talent", "Shortlist proven builders", "Scale your AI team"],
+    },
+  ],
 };
 
 type FooterLinkItem = { label: string; to: string; hash?: string };

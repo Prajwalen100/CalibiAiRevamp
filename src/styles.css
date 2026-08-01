@@ -222,3 +222,32 @@
     transform: translateX(-50%);
   }
 }
+
+/*
+ * Mermaid case-study diagrams. Mermaid injects its own <style> per SVG, so the
+ * rules here only cover layout and the label typography that its theme engine
+ * does not expose as a variable.
+ */
+.mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.mermaid-diagram .nodeLabel,
+.mermaid-diagram .edgeLabel {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.mermaid-diagram .edgeLabel {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Decision diamonds and terminal nodes read as accent-tinted. */
+.mermaid-diagram .node .label {
+  color: var(--ink);
+}

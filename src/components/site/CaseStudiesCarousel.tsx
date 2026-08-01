@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -99,15 +100,15 @@ export function CaseStudiesCarousel() {
                       </div>
                     </div>
 
-                    <a
-                      href={study.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      to="/case-studies/$slug"
+                      params={{ slug: study.slug }}
+                      aria-label={`${caseStudiesSection.cta}: ${study.company}`}
                       className="mono-label group mt-8 inline-flex items-center gap-2 self-start border-b border-ink-hairline pb-1 text-on-ink transition-colors hover:border-accent hover:text-accent"
                     >
                       {caseStudiesSection.cta}
                       <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </article>

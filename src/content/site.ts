@@ -124,7 +124,12 @@ export const services: Service[] = [
   {
     name: "AI Consultation",
     description: "Strategic guidance on AI adoption, implementation, and optimization",
-    features: ["AI readiness assessment", "ROI analysis", "Implementation roadmap", "Team training"],
+    features: [
+      "AI readiness assessment",
+      "ROI analysis",
+      "Implementation roadmap",
+      "Team training",
+    ],
     stat: "200% average ROI",
     image: consultImg,
     alt: "Business strategy session around a meeting table",
@@ -143,6 +148,8 @@ export type CaseStudy = {
   solution: string;
   quote: string;
   author: string;
+  /** Slug of the full article at /case-studies/$slug. */
+  slug: string;
   link: string;
   image: string;
   alt: string;
@@ -164,6 +171,7 @@ export const caseStudies: CaseStudy[] = [
     quote:
       "Calibi AI transformed our customer support. We're now handling 6x more customers with the same team size.",
     author: "— Swapnil Gulhane, Founder",
+    slug: "vramp-automations",
     link: brand.calendly,
     image: vrampImg,
     alt: "Automated manufacturing line inside a factory",
@@ -183,6 +191,7 @@ export const caseStudies: CaseStudy[] = [
     quote:
       "Calibi expertise in Small Language Models and automation helped us deliver next-generation I solutions with significantly higher efficiency and lower operational costs. Their strategic approach transformed our workflow capabilities.",
     author: "— Ajay Bade, CEO",
+    slug: "devionx-technologies",
     link: brand.calendly,
     image: devionxImg,
     alt: "Software engineer reviewing code on multiple screens",
@@ -200,6 +209,7 @@ export const caseStudies: CaseStudy[] = [
     quote:
       "Our staff can now focus on patient care instead of administrative tasks. Game-changing for our practice.",
     author: "— Dr. Patil, Founder",
+    slug: "dermaspace-clinic",
     link: brand.calendly,
     image: dermaImg,
     alt: "Clinician at a modern dermatology clinic consultation room",
@@ -633,7 +643,6 @@ export const footerNav: {
   services: { heading: string; links: FooterLinkItem[] };
   company: { heading: string; links: FooterLinkItem[] };
 } = {
-
   services: {
     heading: "Services We Offer",
     links: [

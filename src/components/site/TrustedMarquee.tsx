@@ -30,9 +30,9 @@ export function TrustedMarquee({
 
   if (!items.length) return null;
 
-  const Item = ({ label, ariaHidden }: { label: string; ariaHidden?: boolean }) => (
+  const Item = ({ label, ariaHidden = false }: { label: string; ariaHidden?: boolean }) => (
     <span
-      aria-hidden={ariaHidden}
+      aria-hidden={ariaHidden || undefined}
       className="display shrink-0 text-lg text-on-ink/70 transition-colors duration-300 hover:text-on-ink sm:text-2xl"
     >
       {label}
@@ -56,9 +56,7 @@ export function TrustedMarquee({
         style={{ ["--marquee-duration" as string]: `${items.length * secondsPerItem}s` }}
       >
         {[0, 1].map((copy) =>
-          items.map((c) => (
-            <Item key={`${copy}-${c}`} label={c} ariaHidden={copy === 1 || undefined} />
-          )),
+          items.map((c) => <Item key={`${copy}-${c}`} label={c} ariaHidden={copy === 1} />),
         )}
       </div>
     </div>

@@ -3,16 +3,16 @@
  * Wording is preserved verbatim from the content inventory (memory.txt).
  */
 
-import chatbotsImg from "@/assets/chatbots.webp.asset.json";
-import voiceImg from "@/assets/voice.webp.asset.json";
-import multiagentImg from "@/assets/multiagent.webp.asset.json";
-import bizautoImg from "@/assets/bizauto.webp.asset.json";
-import contentImg from "@/assets/content.webp.asset.json";
-import prebuiltImg from "@/assets/prebuilt.webp.asset.json";
-import consultImg from "@/assets/consult.webp.asset.json";
-import vrampImg from "@/assets/vramp.webp.asset.json";
-import devionxImg from "@/assets/devionx.webp.asset.json";
-import dermaImg from "@/assets/derma.webp.asset.json";
+import chatbotsImg from "@/assets/chatbots.webp";
+import voiceImg from "@/assets/voice.webp";
+import multiagentImg from "@/assets/multiagent.webp";
+import bizautoImg from "@/assets/bizauto.webp";
+import contentImg from "@/assets/content.webp";
+import prebuiltImg from "@/assets/prebuilt.webp";
+import consultImg from "@/assets/consult.webp";
+import vrampImg from "@/assets/vramp.webp";
+import devionxImg from "@/assets/devionx.webp";
+import dermaImg from "@/assets/derma.webp";
 
 export const brand = {
   name: "Calibi AI",
@@ -63,7 +63,7 @@ export const services: Service[] = [
       "CRM integration",
     ],
     stat: "85% reduction in support tickets",
-    image: chatbotsImg.url,
+    image: chatbotsImg,
     alt: "Customer support specialist wearing a headset at a desk",
   },
   {
@@ -76,7 +76,7 @@ export const services: Service[] = [
       "Voice analytics",
     ],
     stat: "70% faster call resolution",
-    image: voiceImg.url,
+    image: voiceImg,
     alt: "Call centre agent speaking on a headset in an open-plan office",
   },
   {
@@ -89,7 +89,7 @@ export const services: Service[] = [
       "Decision intelligence",
     ],
     stat: "3x productivity increase",
-    image: multiagentImg.url,
+    image: multiagentImg,
     alt: "Rows of servers inside a data centre",
   },
   {
@@ -97,7 +97,7 @@ export const services: Service[] = [
     description: "End-to-end process automation for operations, sales, and customer success",
     features: ["Process mining", "RPA integration", "Data synchronization", "Custom workflows"],
     stat: "60% time savings",
-    image: bizautoImg.url,
+    image: bizautoImg,
     alt: "Warehouse operations team coordinating logistics",
   },
   {
@@ -110,7 +110,7 @@ export const services: Service[] = [
       "Content scheduling",
     ],
     stat: "10x content output",
-    image: contentImg.url,
+    image: contentImg,
     alt: "Content production workspace with laptop and notes",
   },
   {
@@ -118,7 +118,7 @@ export const services: Service[] = [
     description: "Ready-to-deploy AI solutions for common business use cases",
     features: ["Quick deployment", "Customizable templates", "Industry-specific", "Plug-and-play"],
     stat: "Deploy in 48 hours",
-    image: prebuiltImg.url,
+    image: prebuiltImg,
     alt: "Abstract modular technology structure",
   },
   {
@@ -126,7 +126,7 @@ export const services: Service[] = [
     description: "Strategic guidance on AI adoption, implementation, and optimization",
     features: ["AI readiness assessment", "ROI analysis", "Implementation roadmap", "Team training"],
     stat: "200% average ROI",
-    image: consultImg.url,
+    image: consultImg,
     alt: "Business strategy session around a meeting table",
   },
 ];
@@ -165,7 +165,7 @@ export const caseStudies: CaseStudy[] = [
       "Calibi AI transformed our customer support. We're now handling 6x more customers with the same team size.",
     author: "— Swapnil Gulhane, Founder",
     link: brand.calendly,
-    image: vrampImg.url,
+    image: vrampImg,
     alt: "Automated manufacturing line inside a factory",
     metrics: [
       { label: "response Time", before: "4 hours", after: "30 seconds" },
@@ -184,7 +184,7 @@ export const caseStudies: CaseStudy[] = [
       "Calibi expertise in Small Language Models and automation helped us deliver next-generation I solutions with significantly higher efficiency and lower operational costs. Their strategic approach transformed our workflow capabilities.",
     author: "— Ajay Bade, CEO",
     link: brand.calendly,
-    image: devionxImg.url,
+    image: devionxImg,
     alt: "Software engineer reviewing code on multiple screens",
     metrics: [
       { label: "processing Time", before: "24 hours", after: "2 hours" },
@@ -201,7 +201,7 @@ export const caseStudies: CaseStudy[] = [
       "Our staff can now focus on patient care instead of administrative tasks. Game-changing for our practice.",
     author: "— Dr. Patil, Founder",
     link: brand.calendly,
-    image: dermaImg.url,
+    image: dermaImg,
     alt: "Clinician at a modern dermatology clinic consultation room",
     metrics: [
       { label: "no Shows", before: "25%", after: "5%" },

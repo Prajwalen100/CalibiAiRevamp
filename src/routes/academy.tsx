@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import academyImg from "@/assets/academy.webp.asset.json";
+import academyImg from "@/assets/academy.webp";
 import { AcademyContact } from "@/components/site/AcademyContact";
 import { PageHero } from "@/components/site/PageHero";
 import { DisplayHeading, Reveal, SectionLabel } from "@/components/site/primitives";
@@ -55,7 +55,7 @@ function AcademyPage() {
 
             <div className="min-h-[280px] overflow-hidden bg-secondary lg:min-h-0">
               <img
-                src={academyImg.url}
+                src={academyImg}
                 alt="Students collaborating during a hands-on workshop session"
                 loading="lazy"
                 decoding="async"

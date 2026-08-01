@@ -1,6 +1,6 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
-import heroImg from "@/assets/hero.webp.asset.json";
+import heroImg from "@/assets/hero.webp";
 import { brand, hero } from "@/content/site";
 import { Pill } from "./primitives";
 
@@ -8,7 +8,7 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden bg-ink pb-14 pt-28 text-on-ink sm:pb-20 sm:pt-36 lg:pb-24 lg:pt-44">
       <img
-        src={heroImg.url}
+        src={heroImg}
         alt="Structural lattice of a contemporary glass building, viewed from below"
         className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.22]"
         fetchPriority="high"

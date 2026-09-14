@@ -2,15 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, Mail, MapPin } from "lucide-react";
 import { brand, footerNav } from "@/content/site";
 
-function FooterLink({
-  to,
-  hash,
-  label,
-}: {
-  to: string;
-  hash?: string | undefined;
-  label: string;
-}) {
+function FooterLink({ to, hash, label }: { to: string; hash?: string | undefined; label: string }) {
   return (
     <li>
       <Link
@@ -33,7 +25,7 @@ export function Footer() {
   return (
     <footer className="bg-ink text-on-ink">
       <div className="mx-auto max-w-[1500px] px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="min-w-0">
             <div className="display text-3xl sm:text-4xl">{brand.name}</div>
             <p className="mt-5 max-w-md text-sm leading-relaxed text-on-ink-muted">
@@ -67,6 +59,15 @@ export function Footer() {
             <h2 className="mono-label text-on-ink-muted">{footerNav.company.heading}</h2>
             <ul className="mt-6 space-y-3.5">
               {footerNav.company.links.map((l) => (
+                <FooterLink key={l.label} to={l.to} hash={l.hash} label={l.label} />
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="mono-label text-on-ink-muted">{footerNav.legal.heading}</h2>
+            <ul className="mt-6 space-y-3.5">
+              {footerNav.legal.links.map((l) => (
                 <FooterLink key={l.label} to={l.to} hash={l.hash} label={l.label} />
               ))}
             </ul>

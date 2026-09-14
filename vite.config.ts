@@ -61,7 +61,12 @@ if (command === "build") {
       ],
     },
     plugins,
-    server: { host: "::", port: 8080 },
+    server: {
+      host: "::",
+      port: 8080,
+      // Accept the Arena sandbox preview host (e.g. 8080-<sandboxId>.e2b.app).
+      allowedHosts: true,
+    },
   };
 
   // `build --mode development` keeps dev-mode React and skips minification so

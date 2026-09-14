@@ -251,3 +251,36 @@
 .mermaid-diagram .node .label {
   color: var(--ink);
 }
+
+/*
+ * Print: clean document output for legal pages (and any page printed).
+ * The `.no-print` hook is used by the legal document's TOC and action buttons.
+ */
+@media print {
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  section {
+    break-inside: avoid-page;
+  }
+
+  a {
+    text-decoration: none !important;
+  }
+}

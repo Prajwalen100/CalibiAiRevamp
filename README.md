@@ -21,7 +21,7 @@ The dev server runs on [http://localhost:8080](http://localhost:8080).
 | Script              | Description                                     |
 | ------------------- | ----------------------------------------------- |
 | `npm run dev`       | Start the dev server on port 8080               |
-| `npm run build`     | Production build (Nitro, `cloudflare-module`)   |
+| `npm run build`     | Production build (Nitro, `node-server` → `.output/`) |
 | `npm run build:dev` | Build with development mode settings            |
 | `npm run preview`   | Preview the production build locally            |
 | `npm run lint`      | Run ESLint                                      |
@@ -48,6 +48,12 @@ site text rather than hardcoding strings in components.
 
 ## Deployment
 
-`npm run build` emits a Nitro server bundle targeting `cloudflare-module` in `dist/`
-(`dist/client` for static assets, `dist/server` for the worker). Set a different target by
-adjusting the `nitro()` preset in [`vite.config.ts`](vite.config.ts).
+Hosted on **MilesWeb** — pushing to `main` on GitHub builds and deploys the site
+automatically via `.github/workflows/deploy.yml` (build → SSH upload → PM2
+restart). One-time server setup, secrets, and troubleshooting: see
+[DEPLOY.md](DEPLOY.md).
+
+`npm run build` emits a Nitro server bundle in `.output/`
+(`.output/server/index.mjs` is the production entry — see the `start` script
+and `ecosystem.config.cjs`). The target is set via the `nitro()` preset in
+[`vite.config.ts`](vite.config.ts).

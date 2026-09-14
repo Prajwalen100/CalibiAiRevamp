@@ -668,6 +668,7 @@ type FooterLinkItem = { label: string; to: string; hash?: string };
 export const footerNav: {
   services: { heading: string; links: FooterLinkItem[] };
   company: { heading: string; links: FooterLinkItem[] };
+  legal: { heading: string; links: FooterLinkItem[] };
 } = {
   services: {
     heading: "Services We Offer",
@@ -685,6 +686,13 @@ export const footerNav: {
       { label: "Calibi AI Academy", to: "/academy" },
       { label: "Detailed Services", to: "/services" },
       { label: "Partnership Enquiry", to: "/academy", hash: "academy-contact" },
+    ],
+  },
+  legal: {
+    heading: "Legal",
+    links: [
+      { label: "Privacy Policy", to: "/privacy-policy" },
+      { label: "Terms & Conditions", to: "/terms" },
     ],
   },
 };

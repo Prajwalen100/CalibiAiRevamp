@@ -4,7 +4,8 @@
 #  Push to `main` (or run manually from the Actions tab) and this workflow:
 #    1. builds the TanStack Start app (nitro → .output/)
 #    2. ships the build to your MilesWeb server over SSH
-#    3. installs production deps and (re)starts the app with PM2
+#    3. installs production deps and restarts with PM2 when configured (or
+#       leaves a MilesWeb app-manager process ready for its panel restart)
 #
 #  One-time setup + secrets: see DEPLOY.md
 # =============================================================================
@@ -30,11 +31,11 @@ env:
   NODE_VERSION: "22"
   # Server config — override via repo Variables (Settings → Secrets and variables
   # → Actions → Variables) if your setup differs:
-  #   REMOTE_DIR : where the app lives on the server (default: ~/calibiai)
+  #   REMOTE_DIR : MilesWeb app working directory (default: ~/CalibiAiRevamp)
   #   APP_PORT   : port the production app listens on (default: 3000)
   #   RESTART_CMD: optional — custom command (run in REMOTE_DIR) that replaces
-  #                 the built-in PM2 start/restart (e.g. cPanel Node.js manager)
-  REMOTE_DIR: ${{ vars.REMOTE_DIR || '~/calibiai' }}
+  #                 the built-in PM2 start/restart
+  REMOTE_DIR: ${{ vars.REMOTE_DIR || '~/CalibiAiRevamp' }}
   APP_PORT: ${{ vars.APP_PORT || '3000' }}
 
 jobs:
@@ -142,8 +143,37 @@ jobs:
           esac
           mkdir -p "$APP_DIR"
           echo "==> Target: $APP_DIR (user: $(id -un))"
-          echo "==> Node: $(node -v 2>/dev/null || echo 'NOT FOUND — install Node.js 20+ on MilesWeb')"
-          command -v npm >/dev/null || { echo "npm not found — aborting."; exit 1; }
+
+          # MilesWeb provisions Node with NVM, but its non-interactive SSH shell
+          # does not necessarily load ~/.bashrc. Initialize NVM explicitly and
+          # select the same Stable runtime configured in the MilesWeb panel.
+          NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+          if [ ! -s "$NVM_DIR/nvm.sh" ] && [ -s "$HOME/.nvm/nvm.sh" ]; then
+            NVM_DIR="$HOME/.nvm"
+          fi
+          if [ -s "$NVM_DIR/nvm.sh" ]; then
+            export NVM_DIR
+            # Some NVM releases reference optional variables while loading.
+            set +u
+            . "$NVM_DIR/nvm.sh"
+            nvm use --silent stable >/dev/null 2>&1 || true
+            set -u
+          fi
+          export PATH="$HOME/.local/bin:$PATH"
+
+          NODE_VERSION_ACTUAL="$(node -v 2>/dev/null || true)"
+          if [ -z "$NODE_VERSION_ACTUAL" ]; then
+            echo "::error::Node.js is not available to the SSH shell. Enable/select Node.js in the MilesWeb app and ensure its NVM installation is under $HOME/.nvm (or load the MilesWeb activation command for SSH)."
+            exit 1
+          fi
+          echo "==> Node: $NODE_VERSION_ACTUAL"
+          command -v npm >/dev/null || { echo "::error::npm is not available after loading the MilesWeb Node runtime."; exit 1; }
+          NODE_MAJOR="${NODE_VERSION_ACTUAL#v}"
+          NODE_MAJOR="${NODE_MAJOR%%.*}"
+          if [ "$NODE_MAJOR" -lt 20 ]; then
+            echo "::error::Node.js 20+ is required (found $NODE_VERSION_ACTUAL). Select Node 20+ in MilesWeb."
+            exit 1
+          fi
 
           TARBALL="$HOME/calibiai-build.tgz"
           [ -f "$TARBALL" ] || { echo "Uploaded tarball not found at $TARBALL"; exit 1; }

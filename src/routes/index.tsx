@@ -27,7 +27,9 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: `${siteUrl}/` },
-      { rel: "preload", as: "image", href: heroImg, fetchpriority: "high" },
+      // React renders head links as JSX, so the DOM property must be camelCase:
+      // lowercase `fetchpriority` is dropped with a console warning.
+      { rel: "preload", as: "image", href: heroImg, fetchPriority: "high" },
     ],
     scripts: [
       {

@@ -683,6 +683,7 @@ export const footerNav: {
     heading: "Company",
     links: [
       { label: "Our Story", to: "/story" },
+      { label: "Our Products", to: "/products" },
       { label: "Calibi AI Academy", to: "/academy" },
       { label: "Detailed Services", to: "/services" },
       { label: "Partnership Enquiry", to: "/academy", hash: "academy-contact" },

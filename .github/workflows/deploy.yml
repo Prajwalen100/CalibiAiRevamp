@@ -244,13 +244,21 @@ jobs:
             pm2 save
             pm2 ls
           else
-            echo "::error::Nothing restarted the app. The new build is on disk but the"
-            echo "running process is still serving the OLD one, so the site is unchanged."
-            echo "Fix with EITHER:"
-            echo "  * set the RESTART_CMD repository VARIABLE to the panel's restart"
-            echo "    command (Settings -> Secrets and variables -> Actions -> Variables), or"
-            echo "  * install PM2 once on the server: bash ~/setup-milesweb.sh (see DEPLOY.md)"
-            exit 1
+            # MilesWeb's Node.js app runs in "Automatic" start mode, which the
+            # panel defines as "started automatically and restarted if it
+            # exits". There is no restart CLI, so stop the process and let the
+            # panel's supervisor bring it back on the new build. The serve
+            # verification below is what proves this actually worked.
+            echo "==> No PM2 and no RESTART_CMD; signalling the panel-managed app to restart"
+            BEFORE="$(pgrep -f '.output/server/index.mjs' | tr '\n' ' ' || true)"
+            echo "    current pid(s): ${BEFORE:-none}"
+            pkill -f '.output/server/index.mjs' 2>/dev/null || true
+            sleep 5
+            AFTER="$(pgrep -f '.output/server/index.mjs' | tr '\n' ' ' || true)"
+            echo "    pid(s) after restart: ${AFTER:-none}"
+            if [ -z "$AFTER" ]; then
+              echo "    not back yet; the supervisor may take a few more seconds"
+            fi
           fi
 
           # 4) Verify the build that is actually being served.
@@ -275,10 +283,10 @@ jobs:
               echo "==> Verified: $PUBLIC_URL is serving this build."
             else
               echo "::error::$PUBLIC_URL is still serving '${SERVED:-nothing}', not '$NEW_CSS'."
-              echo "The upload and restart reported success but the live site did not change."
-              echo "The process serving the domain is running from a different directory,"
-              echo "or the restart did not actually replace it. Check the MilesWeb panel's"
-              echo "Node.js app: its working directory must be $APP_DIR."
+              echo "The build is on disk but the live site did not pick it up."
+              echo "Recover: MilesWeb panel -> Node.js -> Restart."
+              echo "Then check that app's working directory is $APP_DIR (the panel"
+              echo "shows it in the Node.js Applications table)."
               exit 1
             fi
           fi

@@ -272,21 +272,43 @@ jobs:
             echo "::warning::No styles-*.css in the build; skipping serve verification."
           else
             echo "==> Deployed stylesheet: $NEW_CSS"
+
+            # Ask the app directly first. The server cannot always reach its own
+            # public hostname (the proxy/firewall may not loop back), so a failed
+            # fetch there must NOT be read as "wrong build" — only a successful
+            # fetch returning a different hash means that.
+            probe() {
+              curl -sf --max-time 15 "$1" 2>/dev/null \
+                | grep -o 'styles-[A-Za-z0-9_-]*\.css' | head -1
+            }
+
             SERVED=""
-            for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            REACHED=""
+            for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
               sleep 5
-              SERVED="$(curl -sf --max-time 15 "$PUBLIC_URL/" 2>/dev/null | grep -o 'styles-[A-Za-z0-9_-]*\.css' | head -1 || true)"
+              for target in "http://127.0.0.1:${APP_PORT}/" "$PUBLIC_URL/"; do
+                FOUND="$(probe "$target" || true)"
+                if [ -n "$FOUND" ]; then
+                  REACHED="$target"
+                  SERVED="$FOUND"
+                  break
+                fi
+              done
               if [ "$SERVED" = "$NEW_CSS" ]; then break; fi
-              echo "    attempt $attempt: serving '${SERVED:-nothing}', waiting for '$NEW_CSS'"
+              echo "    attempt $attempt: ${REACHED:-nothing reachable} -> '${SERVED:-?}', want '$NEW_CSS'"
             done
+
             if [ "$SERVED" = "$NEW_CSS" ]; then
-              echo "==> Verified: $PUBLIC_URL is serving this build."
+              echo "==> Verified: $REACHED is serving this build."
+            elif [ -z "$REACHED" ]; then
+              echo "::warning::Could not reach the app on port $APP_PORT or $PUBLIC_URL from the"
+              echo "server, so the running build could not be confirmed. The files are in place"
+              echo "and the app was restarted. Check $PUBLIC_URL yourself."
             else
-              echo "::error::$PUBLIC_URL is still serving '${SERVED:-nothing}', not '$NEW_CSS'."
-              echo "The build is on disk but the live site did not pick it up."
-              echo "Recover: MilesWeb panel -> Node.js -> Restart."
-              echo "Then check that app's working directory is $APP_DIR (the panel"
-              echo "shows it in the Node.js Applications table)."
+              echo "::error::$REACHED is serving '$SERVED', not '$NEW_CSS'."
+              echo "The build is on disk but the app did not pick it up."
+              echo "Recover: MilesWeb panel -> Node.js -> Restart, and confirm that app's"
+              echo "working directory is $APP_DIR."
               exit 1
             fi
           fi

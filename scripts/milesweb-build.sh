@@ -19,7 +19,10 @@ set -eu
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 if [ -s "$NVM_DIR/nvm.sh" ]; then
   . "$NVM_DIR/nvm.sh"
-  nvm use 22 >/dev/null 2>&1 || nvm use stable >/dev/null 2>&1 || true
+  # MilesWeb's provisioned runtime has been seen as v27.0.0-alpha; pin to the
+  # 22 LTS the project is built and tested against, installing it if needed.
+  nvm use 22 >/dev/null 2>&1 || nvm install 22 >/dev/null 2>&1 || true
+  nvm use 22 >/dev/null 2>&1 || true
 fi
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -28,10 +31,15 @@ npm -v
 
 # Vite needs headroom: the bundle pulls in mermaid, cytoscape and katex.
 export NODE_OPTIONS="--max-old-space-size=2048"
-export NODE_ENV=production
 
-# Dev dependencies are required to build, so install everything first.
-npm ci --no-audit --no-fund
+# NODE_ENV must NOT be production here: npm would omit devDependencies, and
+# vite, @vitejs/plugin-react and nitro all live there, so loading
+# vite.config.ts would fail with ERR_MODULE_NOT_FOUND. --include=dev makes it
+# explicit even if the environment presets NODE_ENV.
+npm ci --include=dev --no-audit --no-fund
+
+# Safe from here on: everything needed to build is installed.
+export NODE_ENV=production
 npm run build
 
 # Fail loudly if the Nitro entrypoint is missing rather than restarting a

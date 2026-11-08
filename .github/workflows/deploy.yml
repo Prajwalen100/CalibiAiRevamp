@@ -146,7 +146,7 @@ jobs:
         run: |
           cat > deploy-remote.sh <<'REMOTE'
           set -euo pipefail
-          REMOTE_DIR="$1"; APP_PORT="$2"; RESTART_CMD="$3"
+          REMOTE_DIR="$1"; APP_PORT="$2"; RESTART_CMD="$3"; PUBLIC_URL="${4:-https://calibiai.com}"
 
           # Resolve ~ to the real home directory.
           case "$REMOTE_DIR" in
@@ -244,19 +244,43 @@ jobs:
             pm2 save
             pm2 ls
           else
-            echo "::warning::PM2 not installed on the server — the build is in place, but the app was NOT started."
-            echo "Run scripts/setup-milesweb.sh once (see DEPLOY.md), or start manually: pm2 start $APP_DIR/ecosystem.config.cjs"
-            exit 0
+            echo "::error::Nothing restarted the app. The new build is on disk but the"
+            echo "running process is still serving the OLD one, so the site is unchanged."
+            echo "Fix with EITHER:"
+            echo "  * set the RESTART_CMD repository VARIABLE to the panel's restart"
+            echo "    command (Settings -> Secrets and variables -> Actions -> Variables), or"
+            echo "  * install PM2 once on the server: bash ~/setup-milesweb.sh (see DEPLOY.md)"
+            exit 1
           fi
 
-          # 4) Health check (soft — cPanel's Node.js manager may use its own port).
-          sleep 3
-          if curl -sf -o /dev/null --max-time 10 "http://127.0.0.1:${APP_PORT}/"; then
-            echo "==> Health check passed on port $APP_PORT"
+          # 4) Verify the build that is actually being served.
+          #
+          # A restart command that exits 0 is not proof the site changed: the
+          # previous deploy reported success while the old process kept serving
+          # the old bundle. Compare the stylesheet hash the public site returns
+          # against the one just deployed, and fail the job when they differ.
+          NEW_CSS="$(basename "$(ls -1 "$APP_DIR"/.output/public/assets/styles-*.css 2>/dev/null | head -1)" 2>/dev/null || true)"
+          if [ -z "$NEW_CSS" ]; then
+            echo "::warning::No styles-*.css in the build; skipping serve verification."
           else
-            echo "::warning::Health check on http://127.0.0.1:${APP_PORT}/ failed."
-            echo "The app may be running on a different port (check cPanel → Node.js, or set the APP_PORT variable). Current PM2 status:"
-            pm2 ls || true
+            echo "==> Deployed stylesheet: $NEW_CSS"
+            SERVED=""
+            for attempt in 1 2 3 4 5 6 7 8 9 10; do
+              sleep 5
+              SERVED="$(curl -sf --max-time 15 "$PUBLIC_URL/" 2>/dev/null | grep -o 'styles-[A-Za-z0-9_-]*\.css' | head -1 || true)"
+              if [ "$SERVED" = "$NEW_CSS" ]; then break; fi
+              echo "    attempt $attempt: serving '${SERVED:-nothing}', waiting for '$NEW_CSS'"
+            done
+            if [ "$SERVED" = "$NEW_CSS" ]; then
+              echo "==> Verified: $PUBLIC_URL is serving this build."
+            else
+              echo "::error::$PUBLIC_URL is still serving '${SERVED:-nothing}', not '$NEW_CSS'."
+              echo "The upload and restart reported success but the live site did not change."
+              echo "The process serving the domain is running from a different directory,"
+              echo "or the restart did not actually replace it. Check the MilesWeb panel's"
+              echo "Node.js app: its working directory must be $APP_DIR."
+              exit 1
+            fi
           fi
 
           # 5) Remove the previous build now that the new one is live.
@@ -269,10 +293,11 @@ jobs:
           REMOTE_DIR: ${{ env.REMOTE_DIR }}
           APP_PORT: ${{ env.APP_PORT }}
           RESTART_CMD: ${{ vars.RESTART_CMD || '' }}
+          PUBLIC_URL: ${{ vars.PUBLIC_URL || 'https://calibiai.com' }}
         run: |
           set -euo pipefail
           SSH_OPTS="-p $SSH_PORT -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=30"
-          ARGS="bash -s -- '$REMOTE_DIR' '$APP_PORT' '$RESTART_CMD'"
+          ARGS="bash -s -- '$REMOTE_DIR' '$APP_PORT' '$RESTART_CMD' '$PUBLIC_URL'"
           if [ -n "$SSH_PRIVATE_KEY" ]; then
             printf '%s\n' "$SSH_PRIVATE_KEY" > deploy_key
             chmod 600 deploy_key

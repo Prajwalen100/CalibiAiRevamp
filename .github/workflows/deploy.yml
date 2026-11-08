@@ -42,7 +42,7 @@ jobs:
   # ---------------------------------------------------------------------------
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Checkout
@@ -82,7 +82,7 @@ jobs:
   # ---------------------------------------------------------------------------
   deploy:
     name: Deploy to MilesWeb
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: build
     environment: production
     timeout-minutes: 20
@@ -112,6 +112,17 @@ jobs:
             exit 1
           fi
           echo "SSH target: $SSH_USER@$SSH_HOST (port $SSH_PORT)"
+
+      - name: Ensure sshpass is available (password auth only)
+        if: ${{ env.SSH_PRIVATE_KEY == '' }}
+        run: |
+          if command -v sshpass >/dev/null 2>&1; then
+            echo "sshpass already present: $(sshpass -V 2>&1 | head -1)"
+          else
+            echo "sshpass missing on the runner image - installing."
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq sshpass
+          fi
 
       - name: Upload build to server
         run: |

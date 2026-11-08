@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, Mail, MapPin } from "lucide-react";
+import { FooterPartnerMark } from "@/components/site/PartnerMark";
 import { brand, footerNav } from "@/content/site";
 
 function FooterLink({ to, hash, label }: { to: string; hash?: string | undefined; label: string }) {
@@ -28,6 +29,7 @@ export function Footer() {
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="min-w-0">
             <div className="display text-3xl sm:text-4xl">{brand.name}</div>
+            <FooterPartnerMark className="mt-4" />
             <p className="mt-5 max-w-md text-sm leading-relaxed text-on-ink-muted">
               {brand.footerDescription}
             </p>

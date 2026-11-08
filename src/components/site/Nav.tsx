@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { AnimatePresence, motion, useScroll, useSpring } from "motion/react";
 import { useEffect, useState } from "react";
+import { NavPartnerMark } from "@/components/site/PartnerMark";
 import { brand, nav } from "@/content/site";
 import { cn } from "@/lib/utils";
 
@@ -43,7 +44,9 @@ export function Nav() {
           >
             {brand.name}
           </span>
-          <span className="mono-label hidden text-accent sm:inline">AI Services</span>
+          <span className="hidden shrink-0 sm:block">
+            <NavPartnerMark />
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex">
@@ -91,8 +94,6 @@ export function Nav() {
             <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </a>
         </nav>
-
-
 
         <button
           type="button"

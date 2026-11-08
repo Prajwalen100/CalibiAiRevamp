@@ -26,16 +26,23 @@ Panel -> **GitHub** -> **Configure GitHub deploy**:
 | ------------- | ----------------------------------------- |
 | Repository    | `CalibiAiRevamp`                          |
 | Branch or tag | `main`                                    |
-| Build script  | contents of `scripts/milesweb-build.sh`   |
+| Build script  | `bash scripts/milesweb-build.sh`          |
 
-The build script is kept in version control at
-[`scripts/milesweb-build.sh`](scripts/milesweb-build.sh) so the panel field and
-the repo stay in sync — edit it there, then paste it into the panel.
+The Build script field holds a single line that runs the version-controlled
+script, so edits ship with the code and the panel never needs touching again.
 
-It sources NVM (the deploy shell does not load `~/.bashrc`, so `node` is
-otherwise missing), raises the V8 heap limit for the Vite build, runs
-`npm ci && npm run build`, verifies `.output/server/index.mjs` exists, prunes
-dev dependencies, and restarts PM2 if present.
+**Do not paste the script's contents into the panel textarea.** It rewrites
+line endings to CRLF, and the shell then reads `set -eu\r` and fails with
+`set: -: invalid option`.
+
+MilesWeb builds in a per-deploy directory
+(`/var/www/<site>/deploys/<sha>/`) and activates it only after the build exits
+`0`, so the script deliberately does **not** restart the app — at build time the
+new directory is not live yet. The panel's Node.js app owns the restart.
+
+It sources NVM (the deploy shell does not load `~/.bashrc`), raises the V8 heap
+limit for the Vite build, runs `npm ci && npm run build`, verifies
+`.output/server/index.mjs` exists, and prunes dev dependencies.
 
 **Check the Node.js app settings in the panel** (panel -> Node.js): the
 application startup file must be `.output/server/index.mjs`, relative to

@@ -2,8 +2,12 @@
 # =============================================================================
 #  Build script for the MilesWeb panel's native GitHub deploy.
 #
-#  Paste the body of this file into:
-#      MilesWeb panel -> GitHub -> Configure GitHub deploy -> Build script
+#  Set the panel's Build script field to exactly:
+#      bash scripts/milesweb-build.sh
+#
+#  Do not paste this file's contents into the panel: the textarea rewrites
+#  line endings to CRLF, and the shell then reads `set -eu\r` and dies with
+#  "set: -: invalid option".
 #
 #  It runs ON THE SERVER, from the deploy directory, after MilesWeb clones the
 #  repository. Kept in version control so the panel field and the repo agree.
@@ -37,9 +41,9 @@ test -f .output/server/index.mjs
 # Drop dev dependencies now that the bundle exists.
 npm prune --omit=dev --no-audit --no-fund
 
-# Restart under PM2 when it is installed; a no-op when MilesWeb's own app
-# manager owns the process instead.
-if command -v pm2 >/dev/null 2>&1; then
-  pm2 restart calibiai --update-env || pm2 start ecosystem.config.cjs
-  pm2 save
-fi
+echo "Build complete: $(pwd)/.output/server/index.mjs"
+
+# No process restart here on purpose. MilesWeb builds in a per-deploy
+# directory (/var/www/<site>/deploys/<sha>/) and only activates it after the
+# build exits 0, so restarting the app from here would point it at a
+# directory that is not live yet. The panel's Node.js app owns the restart.

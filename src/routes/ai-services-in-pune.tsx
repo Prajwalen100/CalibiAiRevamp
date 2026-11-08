@@ -1,13 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
+import { CaseStudiesCarousel } from "@/components/site/CaseStudiesCarousel";
 import { ConsultCta } from "@/components/site/ConsultCta";
 import { PageHero } from "@/components/site/PageHero";
+import { Testimonials } from "@/components/site/Testimonials";
 import { DisplayHeading, Pill, Reveal, SectionLabel } from "@/components/site/primitives";
 import { brand, puneLanding } from "@/content/site";
 
 const title = "AI Services in Pune | Calibi AI — AI Automation Company";
 const description =
-  "Looking for AI services near you in Pune? Calibi AI builds AI chatbots, voice agents and business automation from Hinjewadi Phase 1, serving companies across Pune and Pimpri-Chinchwad. Book a free consultation.";
+  "AI services in Pune: Calibi AI builds AI chatbots, voice agents and business automation from Hinjewadi. Book a free consultation.";
 const siteUrl = "https://calibiai.com";
 const pageUrl = `${siteUrl}/ai-services-in-pune`;
 
@@ -19,6 +21,7 @@ export const Route = createFileRoute("/ai-services-in-pune")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
+      { property: "og:locale", content: "en_IN" },
       { property: "og:url", content: pageUrl },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: title },
@@ -124,6 +127,23 @@ function PunePage() {
                   {paragraph}
                 </p>
               ))}
+              <nav aria-label="Related pages" className="mt-10 flex flex-wrap gap-x-8 gap-y-3">
+                {[
+                  { to: "/services", label: "Detailed AI services" },
+                  { to: "/products", label: "Pre-built AI products" },
+                  { to: "/academy", label: "AI training for teams & colleges" },
+                  { to: "/story", label: "About Calibi AI" },
+                ].map((link) => (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 hover:underline"
+                  >
+                    {link.label}
+                    <ArrowUpRight className="size-3.5" aria-hidden />
+                  </Link>
+                ))}
+              </nav>
             </div>
           </Reveal>
         </div>
@@ -180,6 +200,10 @@ function PunePage() {
           </address>
         </div>
       </section>
+
+      <CaseStudiesCarousel />
+
+      <Testimonials />
 
       <section className="border-t border-border bg-background py-20 sm:py-24 lg:py-28">
         <div className="mx-auto max-w-[1500px] px-5 sm:px-8 lg:px-12">

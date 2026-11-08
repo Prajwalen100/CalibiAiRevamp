@@ -768,6 +768,11 @@ export const puneLanding = {
   },
   faqs: [
     {
+      question: "How do I find AI services near me in Pune?",
+      answer:
+        "If you are searching for AI services near you in Pune, Calibi AI operates from Hinjewadi Phase 1 and takes on work across the city and Pimpri-Chinchwad. Email sales@calibiai.com or book a free consultation and we will come to you for the first session.",
+    },
+    {
       question: "Do you work with businesses based in Pune?",
       answer:
         "Yes. Calibi AI is based in Hinjewadi Phase 1, Pune, and works with businesses across the Pune Metropolitan Region, including Pimpri-Chinchwad. We also take on clients elsewhere in India and internationally.",

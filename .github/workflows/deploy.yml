@@ -199,18 +199,31 @@ jobs:
 
           # 1) Extract to a staging dir, then swap the build in atomically.
           echo "==> Extracting build"
-          STAGE="$(mktemp -d)"
+          # Stage INSIDE the app directory, not /tmp. A mktemp staging dir puts
+          # the extracted build on another filesystem, so the swap below becomes
+          # a cross-device copy; this host kills the SSH session during that
+          # ("Connection closed by remote host", exit 255). Same-filesystem
+          # staging makes every move a rename.
+          STAGE="$APP_DIR/.deploy-stage"
+          rm -rf "$STAGE"
+          mkdir -p "$STAGE"
           tar xzf "$TARBALL" -C "$STAGE"
+          echo "==> Extracted"
           rm -f "$TARBALL"
+
           # Clear any .output.old left behind by an interrupted deploy first:
           # `mv a b` moves a INTO b when b is an existing directory, which
           # produces .output.old/.output and then fails outright once that is
           # populated too ("Directory not empty").
           rm -rf "$APP_DIR/.output.old"
+          echo "==> Cleared previous backup"
           if [ -d "$APP_DIR/.output" ]; then mv "$APP_DIR/.output" "$APP_DIR/.output.old"; fi
+          echo "==> Rotated current build"
           mv "$STAGE/.output" "$APP_DIR/.output"
+          echo "==> New build in place"
           cp "$STAGE/package.json" "$STAGE/package-lock.json" "$STAGE/ecosystem.config.cjs" "$APP_DIR/"
           rm -rf "$STAGE"
+          echo "==> Staging cleaned"
 
           # 2) Production dependencies (npm ci uses the uploaded lockfile).
           echo "==> Installing production dependencies"

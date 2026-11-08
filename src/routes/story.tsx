@@ -7,6 +7,8 @@ const title = "Our Story | Calibi AI";
 const description =
   "Calibi AI exists to turn AI from a buzzword into working systems, trained teams, and real operational advantage for businesses and learners.";
 
+const siteUrl = "https://calibiai.com";
+
 export const Route = createFileRoute("/story")({
   head: () => ({
     meta: [
@@ -15,8 +17,10 @@ export const Route = createFileRoute("/story")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${siteUrl}/story` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: `${siteUrl}/story` }],
   }),
   component: StoryPage,
 });

@@ -89,6 +89,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Premium AI automation, development, consulting, and training for businesses, colleges, and corporate teams.",
       },
       { name: "author", content: "Calibi AI" },
+      // Local intent signals: these tell crawlers and answer engines where the
+      // business physically operates, which is what location queries such as
+      // "AI services near me in Pune" are matched against.
+      { name: "geo.region", content: "IN-MH" },
+      { name: "geo.placename", content: "Pune, Maharashtra" },
+      { name: "ICBM", content: "18.5913, 73.7389" },
+      { name: "geo.position", content: "18.5913;73.7389" },
       { property: "og:title", content: "Calibi AI — Premium AI Automation Solutions" },
       {
         property: "og:description",
@@ -127,9 +134,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
+          "@id": `${siteUrl}#organization`,
           name: "Calibi AI",
+          alternateName: "Calibi AI — AI Automation Company in Pune",
           url: siteUrl,
           logo: ogImage,
+          image: ogImage,
           description:
             "Premium AI automation, development, consulting, and training for businesses, colleges, and corporate teams.",
           email: "sales@calibiai.com",
@@ -141,6 +151,39 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             postalCode: "411057",
             addressCountry: "IN",
           },
+          areaServed: [
+            { "@type": "City", name: "Pune" },
+            { "@type": "City", name: "Pimpri-Chinchwad" },
+            { "@type": "Country", name: "India" },
+          ],
+          knowsAbout: [
+            "AI automation",
+            "AI chatbots",
+            "AI voice agents",
+            "Multi-agent AI systems",
+            "Business process automation",
+            "AI consulting",
+            "AI training",
+          ],
+          contactPoint: {
+            "@type": "ContactPoint",
+            contactType: "sales",
+            email: "sales@calibiai.com",
+            areaServed: "IN",
+            availableLanguage: ["English", "Hindi", "Marathi"],
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": `${siteUrl}#website`,
+          name: "Calibi AI",
+          url: siteUrl,
+          publisher: { "@id": `${siteUrl}#organization` },
+          inLanguage: "en-IN",
         }),
       },
     ],

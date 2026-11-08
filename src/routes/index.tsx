@@ -9,7 +9,7 @@ import { ServicesGrid } from "@/components/site/ServicesGrid";
 import { Testimonials } from "@/components/site/Testimonials";
 import { brand, faqs } from "@/content/site";
 
-const title = "Calibi AI — Premium AI Automation for Business";
+const title = "Calibi AI — AI Automation & AI Services Company in Pune";
 const description =
   "Enterprise-grade AI chatbots, voice agents, and business automation. Book a free consultation with Calibi AI, a premium AI automation agency in Pune.";
 const siteUrl = "https://calibiai.com";

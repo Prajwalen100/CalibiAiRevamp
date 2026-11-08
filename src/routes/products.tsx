@@ -8,6 +8,8 @@ const title = "Our Products | Calibi AI";
 const description =
   "The trusted ecosystem for applied AI talent. Where ambitious engineering students build verified portfolios, and forward-thinking companies hire proven AI builders.";
 
+const siteUrl = "https://calibiai.com";
+
 export const Route = createFileRoute("/products")({
   head: () => ({
     meta: [
@@ -16,8 +18,10 @@ export const Route = createFileRoute("/products")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${siteUrl}/products` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: `${siteUrl}/products` }],
   }),
   component: ProductsPage,
 });

@@ -9,6 +9,8 @@ const title = "Calibi AI Academy — AI Training for Colleges & Corporates";
 const description =
   "Practical AI workshops, bootcamps, and automation labs for colleges, placement cells, and corporate teams. Partner with Calibi AI Academy.";
 
+const siteUrl = "https://calibiai.com";
+
 export const Route = createFileRoute("/academy")({
   head: () => ({
     meta: [
@@ -17,8 +19,10 @@ export const Route = createFileRoute("/academy")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${siteUrl}/academy` },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: `${siteUrl}/academy` }],
   }),
   component: AcademyPage,
 });

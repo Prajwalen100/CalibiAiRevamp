@@ -677,6 +677,7 @@ export const footerNav: {
       { label: "AI Consultation", to: "/services", hash: "ai-consultation" },
       { label: "AI Development", to: "/services", hash: "ai-development" },
       { label: "AI Training", to: "/academy" },
+      { label: "AI Services in Pune", to: "/ai-services-in-pune" },
     ],
   },
   company: {
@@ -696,4 +697,100 @@ export const footerNav: {
       { label: "Terms & Conditions", to: "/terms" },
     ],
   },
+};
+
+/**
+ * Local SEO landing page for /ai-services-in-pune.
+ *
+ * Targets location-intent searches ("AI services near me in Pune", "AI
+ * automation company in Pune") and gives answer engines a single page that
+ * states plainly what Calibi AI does and where. Every claim here restates
+ * facts already on the site — services, base location, how engagements start.
+ */
+export const puneLanding = {
+  eyebrow: "Pune, India",
+  lineOne: "AI Services",
+  lineTwo: "in Pune",
+  sub: "Calibi AI is an AI automation company based in Hinjewadi Phase 1, Pune. We build AI chatbots, voice agents, multi-agent systems and business automation for companies across Pune and beyond.",
+  chips: ["Hinjewadi Phase 1", "Serving all of Pune", "Free consultation"],
+  intro: [
+    "Looking for AI services near you in Pune? Calibi AI works with businesses across the city — from IT and SaaS teams in Hinjewadi and Wakad to manufacturing, healthcare, education and retail operations in Baner, Kharadi, Viman Nagar and Pimpri-Chinchwad.",
+    "We are not a reseller. Every chatbot, voice agent and automation is built around the way your business actually runs, deployed into your existing tools, and handed over with training so your team can operate it.",
+  ],
+  whatWeDo: {
+    label: "What we build",
+    heading: "AI that does the work, not demos",
+    items: [
+      {
+        name: "AI chatbots for Pune businesses",
+        body: "Customer-facing assistants trained on your own products, pricing and policies — handling enquiries in English, Hindi and Marathi.",
+      },
+      {
+        name: "AI voice agents",
+        body: "Phone agents that answer, qualify and book, so missed calls stop costing you business outside working hours.",
+      },
+      {
+        name: "Business process automation",
+        body: "Quotes, follow-ups, data entry and reporting wired together across the tools your team already uses.",
+      },
+      {
+        name: "Multi-agent systems",
+        body: "Coordinated agents that carry a multi-step process end to end rather than answering one question at a time.",
+      },
+      {
+        name: "AI consultation",
+        body: "An honest read on where AI pays off in your operation and where it does not, before anyone writes code.",
+      },
+      {
+        name: "AI training for teams and colleges",
+        body: "Calibi AI Academy runs practical AI training for corporate teams and engineering colleges across Pune.",
+      },
+    ],
+  },
+  areas: {
+    label: "Areas we serve",
+    heading: "Across Pune and Pimpri-Chinchwad",
+    body: "On-site discovery sessions anywhere in the Pune Metropolitan Region, with delivery and support handled remotely.",
+    list: [
+      "Hinjewadi",
+      "Wakad",
+      "Baner",
+      "Balewadi",
+      "Aundh",
+      "Kharadi",
+      "Viman Nagar",
+      "Magarpatta",
+      "Hadapsar",
+      "Kothrud",
+      "Shivajinagar",
+      "Pimpri-Chinchwad",
+    ],
+  },
+  faqs: [
+    {
+      question: "Do you work with businesses based in Pune?",
+      answer:
+        "Yes. Calibi AI is based in Hinjewadi Phase 1, Pune, and works with businesses across the Pune Metropolitan Region, including Pimpri-Chinchwad. We also take on clients elsewhere in India and internationally.",
+    },
+    {
+      question: "Can we meet in person before starting?",
+      answer:
+        "Yes. We run discovery sessions on-site anywhere in Pune. Book a free consultation and we will arrange a time, or start with a 30-minute call if that is easier.",
+    },
+    {
+      question: "What does an AI project with Calibi AI cost?",
+      answer:
+        "It depends on scope. The free consultation exists to size that honestly: we look at the process you want automated, tell you whether AI is the right tool, and only then quote.",
+    },
+    {
+      question: "Which AI services do Pune businesses ask for most?",
+      answer:
+        "AI chatbots for customer support, voice agents for inbound calls, and automation of repetitive back-office work such as quoting, follow-ups and reporting.",
+    },
+    {
+      question: "Do you provide AI training for colleges in Pune?",
+      answer:
+        "Yes. Calibi AI Academy runs practical AI training programmes for engineering colleges and corporate teams, delivered on campus or at your office.",
+    },
+  ],
 };

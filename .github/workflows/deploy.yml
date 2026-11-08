@@ -11,11 +11,11 @@
 # =============================================================================
 name: Deploy to MilesWeb
 
+# DISABLED on push: the MilesWeb panel's native GitHub deploy
+# (panel → GitHub → Configure GitHub deploy) is the active deployment path.
+# Running both would race — two deploys writing the same directory and
+# restarting the app on every push. Kept here as a manual fallback.
 on:
-  push:
-    branches: [main]
-  # Manual trigger: GitHub → Actions → "Deploy to MilesWeb" → Run workflow
-  # (lets you pick any branch to deploy for testing)
   workflow_dispatch:
 
 # Never run two deploys at the same time; queue them instead.

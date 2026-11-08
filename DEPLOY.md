@@ -1,27 +1,78 @@
 # Deploying Calibi AI to MilesWeb
 
-This repo ships with a GitHub Actions workflow (`.github/workflows/deploy.yml`)
-that **builds the site and deploys it to your MilesWeb server over SSH every
-time you push to `main`** — no manual uploads, no FTP, no Build step in the
-MilesWeb panel.
+**The active deployment path is the MilesWeb panel's native GitHub deploy.**
+MilesWeb pulls from GitHub itself and builds on the server, so there are no SSH
+credentials in GitHub and nothing to rotate.
 
 ```
-Push to main  →  GitHub builds the app  →  uploads .output/ to your server
-              →  installs production deps  →  (re)starts the app via PM2
+Push to main  ->  MilesWeb clones the repo  ->  runs the Build script
+              ->  installs deps, builds, restarts the app
 ```
 
-Your server (from the MilesWeb panel): `ssh -p 22 calibai1@103.219.109.67`
+Your server (from the MilesWeb panel): `ssh -p 22 calibiai1@103.191.209.67`
+
+> The GitHub Actions workflow (`.github/workflows/deploy.yml`) is **no longer
+> triggered by pushes** — it is manual-only (`workflow_dispatch`) and kept as a
+> fallback. Never enable both on push: they write the same directory and
+> restart the same process, so they race.
+
+---
+
+## 0. MilesWeb native deploy (the one in use)
+
+Panel -> **GitHub** -> **Configure GitHub deploy**:
+
+| Field         | Value                                     |
+| ------------- | ----------------------------------------- |
+| Repository    | `CalibiAiRevamp`                          |
+| Branch or tag | `main`                                    |
+| Build script  | contents of `scripts/milesweb-build.sh`   |
+
+The build script is kept in version control at
+[`scripts/milesweb-build.sh`](scripts/milesweb-build.sh) so the panel field and
+the repo stay in sync — edit it there, then paste it into the panel.
+
+It sources NVM (the deploy shell does not load `~/.bashrc`, so `node` is
+otherwise missing), raises the V8 heap limit for the Vite build, runs
+`npm ci && npm run build`, verifies `.output/server/index.mjs` exists, prunes
+dev dependencies, and restarts PM2 if present.
+
+**Check the Node.js app settings in the panel** (panel -> Node.js): the
+application startup file must be `.output/server/index.mjs`, relative to
+MilesWeb's deploy directory, and the Node version must be 20+. If the startup
+file points elsewhere, the build will succeed while the panel keeps serving the
+old copy.
+
+**If the server build fails on memory or time limits**, that is the known
+weakness of building on shared hosting: this bundle pulls in mermaid (~2.5 MB),
+cytoscape (~870 KB) and katex (~500 KB). The Actions workflow below builds on
+GitHub's runners and ships only `.output/`, and is the better fallback in that
+case.
+
+---
+
+## Fallback: GitHub Actions over SSH (manual trigger only)
+
+Everything below describes the fallback workflow. Run it from
+**GitHub -> Actions -> "Deploy to MilesWeb" -> Run workflow**.
+
+> Note on secrets: the deploy job reads `environment: production`. Secrets
+> stored in environments *named after the secret* (e.g. an environment called
+> `SSH_PASSWORD`) are never loaded — put them in repository secrets, or in a
+> single environment named `production`. `REMOTE_DIR` is read as a
+> **variable** (`vars.REMOTE_DIR`), not a secret, so storing it as a secret has
+> no effect.
 
 ---
 
 ## 1. One-time server setup (≈ 2 minutes)
 
 Open **MilesWeb → cPanel → Terminal** (or connect from your own computer with
-`ssh -p 22 calibai1@103.219.109.67`) and run the included setup script once:
+`ssh -p 22 calibiai1@103.191.209.67`) and run the included setup script once:
 
 ```bash
 # from a machine that has the repo cloned:
-scp -P 22 -r scripts/setup-milesweb.sh calibai1@103.219.109.67:~/
+scp -P 22 -r scripts/setup-milesweb.sh calibiai1@103.191.209.67:~/
 # then on the server:
 bash ~/setup-milesweb.sh
 ```
@@ -40,8 +91,8 @@ repository secret**, add:
 
 | Secret            | Value (yours)             | Notes                                        |
 | ----------------- | ------------------------- | -------------------------------------------- |
-| `SSH_HOST`        | `103.219.109.67`          | Server address from the MilesWeb panel       |
-| `SSH_USER`        | `calibai1`                | SSH username from the MilesWeb panel         |
+| `SSH_HOST`        | `103.191.209.67`          | Server address from the MilesWeb panel       |
+| `SSH_USER`        | `calibiai1`                | SSH username from the MilesWeb panel         |
 | `SSH_PORT`        | `22`                      | (optional — defaults to 22)                  |
 | `SSH_PASSWORD`    | your MilesWeb SSH password| From the panel's "SSH Password Authentication" |
 
@@ -67,18 +118,14 @@ Variables), only if you need to change defaults:
 | `RESTART_CMD`   | *(empty)*            | Custom restart command run in `REMOTE_DIR` instead of the PM2 logic (use this for cPanel's Node.js App manager) |
 | `PUBLIC_URL`    | `https://calibiai.com` | Origin used for the post-deploy public check       |
 
-## 3. Deploy
+## 3. Deploy (fallback workflow)
 
-```bash
-git push origin main
-```
+**Actions → "Deploy to MilesWeb" → Run workflow → pick the branch.** This
+workflow no longer runs on push — the MilesWeb native deploy (section 0) does.
+Use it when a server-side build fails or you need to ship from a branch.
 
-Watch it at **GitHub → Actions → "Deploy to MilesWeb"**. A green check means
-the site is live. To deploy a branch for testing (e.g. this one before
-merging): **Actions → Deploy to MilesWeb → Run workflow → pick the branch**.
-
-Every push to `main` re-deploys automatically. The build is swapped in
-atomically, so a failed deploy never takes the live site down.
+The build is swapped in atomically, so a failed deploy never takes the live
+site down.
 
 ## 4. Pointing calibiai.com at the app
 
@@ -86,7 +133,7 @@ The app listens on port **3000** by default (`ecosystem.config.cjs`).
 Your domain needs to reach it:
 
 - **cPanel → "Setup Node.js App" (recommended):** create/select an app with
-  - Application root: `/home/calibai1/calibiai`
+  - Application root: `/home/calibiai1/calibiai`
   - Application startup file: `.output/server/index.mjs`
   - Application URL: `calibiai.com` (port `3000`)
   - Node version: 20/22

@@ -1,24 +1,23 @@
 # Deploying Calibi AI to MilesWeb
 
-**The active deployment path is the MilesWeb panel's native GitHub deploy.**
-MilesWeb pulls from GitHub itself and builds on the server, so there are no SSH
-credentials in GitHub and nothing to rotate.
+**The active deployment path is the GitHub Actions workflow**
+(`.github/workflows/deploy.yml`): it builds on GitHub's runners and ships
+`.output/` to the server over SSH on every push to `main`.
 
 ```
-Push to main  ->  MilesWeb clones the repo  ->  runs the Build script
-              ->  installs deps, builds, restarts the app
+Push to main  ->  GitHub builds the app  ->  uploads .output/ over SSH
+              ->  installs production deps  ->  restarts the app via PM2
 ```
 
 Your server (from the MilesWeb panel): `ssh -p 22 calibiai1@103.191.209.67`
 
-> The GitHub Actions workflow (`.github/workflows/deploy.yml`) is **no longer
-> triggered by pushes** — it is manual-only (`workflow_dispatch`) and kept as a
-> fallback. Never enable both on push: they write the same directory and
-> restart the same process, so they race.
+> **Turn OFF "Auto deploy when pushed to GitHub"** in the MilesWeb panel
+> (GitHub section). The panel's native deploy and this workflow both write the
+> server and restart the app, so running both on push makes them race.
 
 ---
 
-## 0. MilesWeb native deploy (the one in use)
+## Alternative: MilesWeb native deploy (not in use)
 
 Panel -> **GitHub** -> **Configure GitHub deploy**:
 
@@ -58,10 +57,10 @@ case.
 
 ---
 
-## Fallback: GitHub Actions over SSH (manual trigger only)
+## GitHub Actions over SSH (the active path)
 
-Everything below describes the fallback workflow. Run it from
-**GitHub -> Actions -> "Deploy to MilesWeb" -> Run workflow**.
+Every push to `main` deploys. You can also run it by hand from
+**GitHub -> Actions -> "Deploy to MilesWeb" -> Run workflow** to ship a branch.
 
 > Note on secrets: the deploy job reads `environment: production`. Secrets
 > stored in environments *named after the secret* (e.g. an environment called
@@ -125,11 +124,14 @@ Variables), only if you need to change defaults:
 | `RESTART_CMD`   | *(empty)*            | Custom restart command run in `REMOTE_DIR` instead of the PM2 logic (use this for cPanel's Node.js App manager) |
 | `PUBLIC_URL`    | `https://calibiai.com` | Origin used for the post-deploy public check       |
 
-## 3. Deploy (fallback workflow)
+## 3. Deploy
 
-**Actions → "Deploy to MilesWeb" → Run workflow → pick the branch.** This
-workflow no longer runs on push — the MilesWeb native deploy (section 0) does.
-Use it when a server-side build fails or you need to ship from a branch.
+```bash
+git push origin main
+```
+
+Watch it at **GitHub → Actions → "Deploy to MilesWeb"**. To ship a branch
+without merging: **Run workflow → pick the branch**.
 
 The build is swapped in atomically, so a failed deploy never takes the live
 site down.

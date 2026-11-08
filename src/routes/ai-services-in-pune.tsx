@@ -5,7 +5,7 @@ import { ConsultCta } from "@/components/site/ConsultCta";
 import { PageHero } from "@/components/site/PageHero";
 import { Testimonials } from "@/components/site/Testimonials";
 import { DisplayHeading, Pill, Reveal, SectionLabel } from "@/components/site/primitives";
-import { brand, puneLanding } from "@/content/site";
+import { brand, partner, puneLanding } from "@/content/site";
 
 const title = "AI Services in Pune | Calibi AI — AI Automation Company";
 const description =
@@ -63,6 +63,7 @@ export const Route = createFileRoute("/ai-services-in-pune")({
             "AI training",
           ],
           knowsAbout: puneLanding.whatWeDo.items.map((i) => i.name),
+          memberOf: { "@type": "Organization", name: partner.name },
           hasOfferCatalog: {
             "@type": "OfferCatalog",
             name: "AI services in Pune",
@@ -189,8 +190,14 @@ function PunePage() {
               <Pill key={area}>{area}</Pill>
             ))}
           </div>
-          <address className="mt-12 not-italic text-sm text-muted-foreground">
-            <strong className="font-medium text-foreground">Calibi AI</strong>
+          <p className="mt-12 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            {partner.blurb}
+          </p>
+          <address className="mt-8 not-italic text-sm text-muted-foreground">
+            <strong className="font-medium text-foreground">Calibi AI</strong>{" "}
+            <span className="text-muted-foreground">
+              {partner.relationship} {partner.name}
+            </span>
             <br />
             {brand.address}
             <br />

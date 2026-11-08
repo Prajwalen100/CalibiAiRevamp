@@ -14,7 +14,6 @@ import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
 
-
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -105,7 +104,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Calibi AI — Premium AI Automation Solutions" },
-      { name: "twitter:description", content: "Premium AI automation, development, consulting, and training for businesses, colleges, and corporate teams." },
+      {
+        name: "twitter:description",
+        content:
+          "Premium AI automation, development, consulting, and training for businesses, colleges, and corporate teams.",
+      },
       { property: "og:url", content: siteUrl },
       { property: "og:image", content: ogImage },
       { name: "twitter:image", content: ogImage },
@@ -172,6 +175,38 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             areaServed: "IN",
             availableLanguage: ["English", "Hindi", "Marathi"],
           },
+          // The MindLyft AI collaboration, stated as a relationship between two
+          // entities rather than only as on-page text.
+          memberOf: { "@id": `${siteUrl}#mindlyft` },
+          subjectOf: { "@id": `${siteUrl}#collaboration` },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": `${siteUrl}#mindlyft`,
+          name: "MindLyft AI",
+          description: "Collaboration partner of Calibi AI.",
+          member: { "@id": `${siteUrl}#organization` },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": `${siteUrl}#collaboration`,
+          url: siteUrl,
+          name: "Calibi AI in collaboration with MindLyft AI",
+          about: [{ "@id": `${siteUrl}#organization` }, { "@id": `${siteUrl}#mindlyft` }],
+          mentions: [
+            { "@type": "Organization", name: "Calibi AI" },
+            { "@type": "Organization", name: "MindLyft AI" },
+          ],
+          description:
+            "Calibi AI works in collaboration with MindLyft AI on AI automation, development and training engagements.",
         }),
       },
       {
@@ -225,4 +260,3 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
-

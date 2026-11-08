@@ -24,6 +24,18 @@ export const brand = {
   calendly: "https://calendly.com/prajwalen100/30min",
 };
 
+/**
+ * Collaboration credit. Rendered in the nav and footer by PartnerMark, and
+ * emitted as structured data so crawlers and answer engines read it as a
+ * business relationship rather than two names sitting next to each other.
+ */
+export const partner = {
+  name: "MindLyft AI",
+  relationship: "In collaboration with",
+  blurb:
+    "Calibi AI works in collaboration with MindLyft AI, combining both teams on AI automation, development and training engagements.",
+};
+
 export const nav = [
   { label: "Home", to: "/" },
   { label: "Detailed Services", to: "/services" },

@@ -169,7 +169,13 @@ jobs:
             # Some NVM releases reference optional variables while loading.
             set +u
             . "$NVM_DIR/nvm.sh"
-            nvm use --silent stable >/dev/null 2>&1 || true
+            # `stable` has been seen resolving to v27.0.0-alpha on this host;
+            # pin the 22 LTS the app is built against.
+            nvm use --silent 22 >/dev/null 2>&1 \
+              || nvm install 22 >/dev/null 2>&1 \
+              || nvm use --silent stable >/dev/null 2>&1 \
+              || true
+            nvm use --silent 22 >/dev/null 2>&1 || true
             set -u
           fi
           export PATH="$HOME/.local/bin:$PATH"
@@ -196,6 +202,11 @@ jobs:
           STAGE="$(mktemp -d)"
           tar xzf "$TARBALL" -C "$STAGE"
           rm -f "$TARBALL"
+          # Clear any .output.old left behind by an interrupted deploy first:
+          # `mv a b` moves a INTO b when b is an existing directory, which
+          # produces .output.old/.output and then fails outright once that is
+          # populated too ("Directory not empty").
+          rm -rf "$APP_DIR/.output.old"
           if [ -d "$APP_DIR/.output" ]; then mv "$APP_DIR/.output" "$APP_DIR/.output.old"; fi
           mv "$STAGE/.output" "$APP_DIR/.output"
           cp "$STAGE/package.json" "$STAGE/package-lock.json" "$STAGE/ecosystem.config.cjs" "$APP_DIR/"
